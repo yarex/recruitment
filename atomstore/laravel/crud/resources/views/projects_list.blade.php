@@ -3,6 +3,23 @@
 @section('title', "Projects")
 
 
+@section('stylesheets')
+<style>
+    .row0 {
+        background: #ff8533;
+    }
+
+    .row1 {
+        background: #66cc66;
+    }
+
+    .row2 {
+        background: #ffff99;
+    }
+</style>
+@endsection
+
+
 @section('content')
 
 <div class="container">
@@ -11,7 +28,7 @@
             Wyświetl projekty: 
         </div>
         <div class="col-2">
-            <select>
+            <select id="activity-filter" class="form-control">
                 <option value="" selected>Wszystkie</option>
                 <option value="0">Nieaktywne</option>
                 <option value="1">Aktywne</option>
@@ -21,24 +38,31 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <table>
+            <table id="projects-table" class="table">
                 <thead>
                     <tr>
                         <th>Nazwa projektu</th>
-                        <th>Adres strony</th>
-                        <th>Aktywność projektu</th>
+
                         <th>Nazwa grupy projektu</th>
                         <th>Nazwa kampanii</th>
+
+                        <th>Adres strony</th>
+                        <th>Aktywność projektu</th>
+                       
                     </tr>
                 </thead>
                 <tbody>
                     @foreach($projects as $project)
                         @foreach($project->groups as $group)
                             @foreach($group->campaigns as $campaign)
-                            <tr>
+                            <tr class="row{{$project->active}}">
                                 <td>{{ $project->name ?? null }}</td>
+
+                                <td>{{ $group->name ?? null }}</td>
+                                <td >{{ $campaign->name ?? null }}</td>
+
                                 <td>{{ $project->website ?? null}}</td>
-                                <td>
+                            <td>
                                     @if($project->active === 0)
                                     nieaktywny
                                     @elseif ($project->active === 1)
@@ -47,10 +71,7 @@
                                     w trakcie realizacji
                                     @endif
                                 </td>
-                                
-                                <td>{{ $group->name ?? null }}</td>
-                                <td >{{ $campaign->name ?? null }}</td>
-                                                    
+                                           
                                 {{-- Buttons --}}
                                 <td>
                                     <a href="/projects/{{ $campaign->id }}">
@@ -77,13 +98,29 @@
                     @endforeach
                 </tbody>
             </table>
-
-            {{ $projects->links() }}
-
+        </div>
+        <div class="row">
+            <div class="col-12">
+                {{ $projects->links() }}
+            </div>
         </div>
     </div>
 </div>
 
+@endsection
 
+
+@section('javascripts')
+<script defer>
+
+    (function($) {
+        $(document).ready(function() {
+            $('#activity-filter').change(function() {
+                window.location.search = 'status=' + $(this).val()
+            });
+        });
+    })(jQuery);
+    
+</script>
 
 @endsection

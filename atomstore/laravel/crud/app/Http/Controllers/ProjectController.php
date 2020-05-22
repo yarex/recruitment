@@ -10,10 +10,16 @@ use \App\Models\ProjectGroupCampaign;
 class ProjectController extends Controller
 {
     // READ
-    public function index()
+    public function index(Request $req)
     {
-        $projects = Project::paginate(20);
+        $status = $req->status;
 
+        if(in_array($status, ['0', '1', '2'])) {
+            $projects = Project::where('active', $status)->paginate(20);
+        } else {
+            $projects = Project::paginate(20);
+        }
+        
         return view('projects_list', [
             'projects' => $projects
         ]);
@@ -28,7 +34,7 @@ class ProjectController extends Controller
     }
 
 
-    // CREATE
+    // CREATE - nie wymieniono w instrukcji
     public function create()
     {
         return view('create_campaign');
