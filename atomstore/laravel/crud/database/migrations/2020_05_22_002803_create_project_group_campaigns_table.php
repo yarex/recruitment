@@ -1,0 +1,35 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+class CreateProjectGroupCampaignsTable extends Migration
+{
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up()
+    {
+        Schema::create('project_group_campaigns', function (Blueprint $table) {
+            $table->increments("id");
+            
+            $table->integer("project_group_id");
+            $table->string("name", 191);
+            $table->integer("status");
+            $table->datetime("date_start");
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down()
+    {
+        Schema::dropIfExists('project_group_campaigns');
+    }
+}
